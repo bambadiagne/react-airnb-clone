@@ -5,20 +5,23 @@ import {
    SIGN_UP_FAIL_ACTION,
    LOGOUT_ACTION,
   } from "./types";
+
+import AuthService from "../../services/auth/auth-service";
   
-  import AuthService from "../services/auth.service";
+  export const register = (signupData) => {
   
-  export const register = (username, email, password) => (dispatch) => {
-    return AuthService.register(username, email, password).then(
+  AuthService.register(signupData).then(
       (response) => {
-        dispatch({
+        console.log('nice',response);
+        return new Promise.resolve({
           type: SIGN_UP_SUCCESS_ACTION,
         });
   
         
-        return Promise.resolve();
       },
       (error) => {
+        console.log("sldskl",signupData);
+  
         const message =
           (error.response &&
             error.response.data &&
@@ -26,21 +29,21 @@ import {
           error.message ||
           error.toString();
   
-        dispatch({
+        return new Promise.reject( {
           type: SIGN_UP_FAIL_ACTION,
         });
   
   
-        return Promise.reject();
-      }
-    );
+              }
+    )
+  .catch(err=>console.log("catch err",err))
   };
   
   export const login = (username, password) => (dispatch) => {
     return AuthService.login(username, password).then(
       (data) => {
         dispatch({
-          type: LOGIN_SUCCESS,
+          type: SIGN_IN_SUCCESS_ACTION,
           payload: { user: data },
         });
   
@@ -55,7 +58,7 @@ import {
           error.toString();
   
         dispatch({
-          type: SIGN_UP_FAIL_ACTION,
+          type: SIGN_IN_FAIL_ACTION,
         });
   
    
@@ -71,4 +74,5 @@ import {
       type: LOGOUT_ACTION,
     });
   };
-  
+
+    

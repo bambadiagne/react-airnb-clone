@@ -12,7 +12,7 @@ function App() {
      <Navbar/>
      <div className="justify-content-center">
           <Switch>
-            <Route exact path={"/signup"} component={SignUp} />
+            <Route exact path={"/signup"} component={()=><SignUp/>} />
             <Route exact path="/signin" component={SignIn} />
            </Switch>
         </div>
