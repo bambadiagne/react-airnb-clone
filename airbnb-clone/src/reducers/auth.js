@@ -6,7 +6,7 @@ import {
     LOGOUT_ACTION,  
 } from "../actions/auth/types";
   
-  const user = localStorage.getItem("user");
+  const user = JSON.parse(localStorage.getItem("user"));
   const initialState = user 
     ? { isLoggedIn: true, user }
     : { isLoggedIn: false, user: null };
@@ -29,7 +29,7 @@ import {
         return {
           ...state,
           isLoggedIn: true,
-          user: payload.user,
+          user: payload,
         };
       case SIGN_IN_FAIL_ACTION:
         return {
