@@ -9,7 +9,7 @@ class AuthService {
       if (profile === 'locataire') {
         TenantService.getSingleTenantByNameAndPassword(username, password).then(res => {
 
-          localStorage.setItem("user",JSON.stringify({ username, profile, id: res.id }))
+          localStorage.setItem("user", JSON.stringify({ username, profile, id: res.id }))
           resolve(res)
         })
           .catch((err) => { reject(err) })
@@ -19,7 +19,7 @@ class AuthService {
 
         LandLordService.getSingleLandLordByNameAndPassword(username, password).then(res => {
 
-          localStorage.setItem("user",JSON.stringify({ username, profile, id: res.id }))
+          localStorage.setItem("user", JSON.stringify({ username, profile, id: res.id }))
           resolve(res)
         })
           .catch((err) => { reject(err) })

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import '../../css/signup.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faPaperPlane, faLock, faUserClock, faUser, faBriefcase } from '@fortawesome/fontawesome-free-solid';
@@ -108,7 +108,7 @@ function SignUp({ signUpDispatch }) {
 
     return <div className="signup-form ">
 
-        <form onSubmit={handleSubmit} ><br />
+        <form  onSubmit={handleSubmit} ><br />
             <ul>
                 {errors.errors.map((err) => <li key={err} className='text-danger'>{err}</li>)}
             </ul>
