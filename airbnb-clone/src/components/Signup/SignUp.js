@@ -106,7 +106,8 @@ function SignUp({ signUpDispatch }) {
 
     }
 
-    return <div className="signup-form ">
+    return <div className='container-fluid home'>
+     <div className="signup-form ">
 
         <form  onSubmit={handleSubmit} ><br />
             <ul>
@@ -199,7 +200,7 @@ function SignUp({ signUpDispatch }) {
     </div>
 
 
-
+    </div>
 
 }
 

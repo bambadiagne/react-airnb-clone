@@ -34,20 +34,25 @@ function Navbar ({userStatus,logOutDispatch}) {
                   <Link className="nav-link" to="/"></Link>
               </li>
               <li className="nav-item">
-                 < Link to={"/chambres"} className="nav-link">
-                   Liste des Chambres
+                 < Link to={"/rooms"} className="nav-link">
+                   Chambres
                   </Link>
               </li>
+              {!userStatus.isLoggedIn?"": <li className="nav-item">
+                 < Link to={"/reservations"} className="nav-link">
+                   Reservations
+                  </Link>
+              </li>}
               </ul>
               <ul className="navbar-nav ms-auto ">
               {!userStatus.isLoggedIn || (user && user.profile==="locateur")?'':<Link  style={{marginLeft:"5px"}} to={"/reservations"} className="nav-link  btn btn-success text-white ">
                     Mes reservations       
               </Link>}
               
-              {!userStatus.isLoggedIn || (user && user.profile==="locataire")?"":<Link  style={{marginLeft:"5px"}}  to={"/signup"} className="nav-link  btn btn-success text-white ">
+              {!userStatus.isLoggedIn || (user && user.profile==="locataire")?"":<Link  style={{marginLeft:"5px"}}  to={"/annonces"} className="nav-link  btn btn-success text-white ">
                     Annonces       
               </Link>}
-              {!userStatus.isLoggedIn?"":<Link style={{marginLeft:"5px"}}   to={"/profile"} className="= nav-link  btn btn-danger text-white "><FontAwesomeIcon icon={faUser} className="icon bg-danger" border />Mon profile
+              {!userStatus.isLoggedIn?"":<Link style={{marginLeft:"5px"}}   to={"/profile"} className="= nav-link  btn btn-danger text-white ">Mon profile
               </Link>}
               {userStatus.isLoggedIn?"":<Link  style={{marginLeft:"5px"}}  to={"/signup"} className="nav-link  btn btn-success text-white ">
                     Inscription       

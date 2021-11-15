@@ -1,10 +1,10 @@
 import axios from "axios";
-import { API_URL } from "../constantes";
+import { BASE_URL } from "../constantes";
 class TownService {
     getAllTowns() {
         return new Promise((resolve, reject) => {
-            axios.get(API_URL + "towns").then((res) => {
-                resolve(res)
+            axios.get(BASE_URL + "towns").then((res) => {
+                resolve(res.data)
             })
                 .catch(err => {
                     reject(err)
@@ -15,3 +15,4 @@ class TownService {
 
 
 }
+export default new TownService();
