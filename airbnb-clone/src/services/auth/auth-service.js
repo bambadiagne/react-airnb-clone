@@ -4,30 +4,33 @@ import TenantService from "../tenant/tenant-service";
 import LandLordService from "../landlord/landlord-service";
 class AuthService {
   login(username, profile, password) {
-
     return new Promise((resolve, reject) => {
-      if (profile === 'locataire') {
-        TenantService.getSingleTenantByNameAndPassword(username, password).then(res => {
-
-          localStorage.setItem("user", JSON.stringify({ username, profile, id: res.id }))
-          resolve(res)
-        })
-          .catch((err) => { reject(err) })
-
-
+      if (profile === "locataire") {
+        TenantService.getSingleTenantByNameAndPassword(username, password)
+          .then((res) => {
+            localStorage.setItem(
+              "user",
+              JSON.stringify({ username, profile, id: res.id })
+            );
+            resolve(res);
+          })
+          .catch((err) => {
+            reject(err);
+          });
       } else {
-
-        LandLordService.getSingleLandLordByNameAndPassword(username, password).then(res => {
-
-          localStorage.setItem("user", JSON.stringify({ username, profile, id: res.id }))
-          resolve(res)
-        })
-          .catch((err) => { reject(err) })
-
-
+        LandLordService.getSingleLandLordByNameAndPassword(username, password)
+          .then((res) => {
+            localStorage.setItem(
+              "user",
+              JSON.stringify({ username, profile, id: res.id })
+            );
+            resolve(res);
+          })
+          .catch((err) => {
+            reject(err);
+          });
       }
-    }
-    );
+    });
   }
 
   logout() {
@@ -36,27 +39,26 @@ class AuthService {
   }
 
   async register(signupData) {
-    console.log('ok');
+    console.log("ok");
 
     return new Promise(async (resolve, reject) => {
-      if (signupData.profile === 'locataire') {
-
-        await axios.post(API_URL + "tenants", signupData)
+      if (signupData.profile === "locataire") {
+        await axios
+          .post(API_URL + "tenants", signupData)
           .then((res) => {
-            console.log('NICE');
+            console.log("NICE");
 
-            resolve(res)
-          }
-          )
-          .catch(err => reject(err))
-      }
-      else if (signupData.profile === 'locateur') {
+            resolve(res);
+          })
+          .catch((err) => reject(err));
+      } else if (signupData.profile === "locateur") {
         console.log("sldjTAIRE");
-        await axios.post(API_URL + "landlords", signupData).then((res) => resolve(res)
-        )
-          .catch(err => reject(err))
+        await axios
+          .post(API_URL + "landlords", signupData)
+          .then((res) => resolve(res))
+          .catch((err) => reject(err));
       }
-    })
+    });
   }
 }
 

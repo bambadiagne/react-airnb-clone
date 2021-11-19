@@ -1,10 +1,9 @@
 .topnav a:hover {
-    border-bottom: 3px solid white;
+  border-bottom: 3px solid white;
 }
-li{
-    color: white;
+li {
+  color: white;
 }
 .nav-link {
-    color: white;
-
+  color: white;
 }

@@ -1,0 +1,8 @@
+.search-bar {
+  border: 1px solid white;
+  border-radius: 10px;
+  height: 150px;
+}
+.box-search {
+  min-height: 100px;
+}

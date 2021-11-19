@@ -1,33 +1,30 @@
-.room-block{
+.room-block {
   flex-basis: 30%;
-  margin:1%;
+  margin: 1%;
   flex-grow: 0;
-	flex-shrink: 0;
-  
+  flex-shrink: 0;
 }
 
-.home{
-	background-image:url("../images/comos2.jpg");
+.home {
+  background-image: url("../images/comos2.jpg");
 }
 .input-container {
-	display: -ms-flexbox; /* IE10 */
-	display: flex;
-	width: 100%;
-	margin-bottom: 20px;
-  }
-  
-  .icon {
-	font-size: 2em;
-    color: white;
-	background: dodgerblue;
-	
-  }
+  display: -ms-flexbox; /* IE10 */
+  display: flex;
+  width: 100%;
+  margin-bottom: 20px;
+}
 
-  @media only screen and (max-device-width: 	720px) {
-    .room-block{
-      width: 100%;
-      margin:1%;
-      height: 100%;
-    }
-    
+.icon {
+  font-size: 2em;
+  color: white;
+  background: dodgerblue;
+}
+
+@media only screen and (max-device-width: 720px) {
+  .room-block {
+    width: 100%;
+    margin: 1%;
+    height: 100%;
   }
+}

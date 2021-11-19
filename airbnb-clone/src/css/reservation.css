@@ -1,0 +1,11 @@
+.form-control {
+  box-shadow: none;
+  color: #969fa4;
+}
+.form-control:focus {
+  border-color: #5cb85c;
+}
+.form-control,
+.btn {
+  border-radius: 3px;
+}
