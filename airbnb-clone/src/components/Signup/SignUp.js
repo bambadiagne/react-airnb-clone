@@ -21,14 +21,14 @@ import {
 function SignUp({ signUpDispatch }) {
   const dispatchAction = signUpDispatch;
   const [successful, setSuccessful] = useState(false);
-  const [birth_date, setStartDate] = useState(new Date());
+  const [birthDate, setStartDate] = useState(new Date());
   const [profile, setProfile] = useState(null);
   const [errors, setErrors] = useState({ errors: [] });
   const userData = {
     first_name: null,
     last_name: null,
     mail_address: null,
-    birth_date: new Date(),
+    birth_date: '',
     gender: null,
     confirmationPassword: null,
     username: null,
@@ -59,9 +59,6 @@ function SignUp({ signUpDispatch }) {
       errorsForm.push("Le genre est obligatoire");
     }
 
-    if (!birth_date) {
-      errorsForm.push("La date de naissance est obligatoire");
-    }
     if (!first_name) {
       errorsForm.push("Le prenom est obligatoire");
     }
@@ -96,20 +93,14 @@ function SignUp({ signUpDispatch }) {
     let user;
 
     if (validateuserData(signupData)) {
-      setSignupData({
-        ...signupData,
-        birth_date: birth_date.toISOString().split("T")[0],
-      });
       if (profile === "locataire") {
-        user = { ...signupData, balance: 0, profile: profile };
+        user = { ...signupData,    birth_date: birthDate.toISOString().split("T")[0], balance: 0, profile: profile };
       } else {
-        user = { ...signupData, benefits: 0, profile: profile };
+        user = { ...signupData,     birth_date: birthDate.toISOString().split("T")[0],benefits: 0, profile: profile };
       }
       console.log("user", user);
-      try {
+     try {
         const res = await AuthService.register(user);
-        console.log("nice");
-        console.log("eere", res);
         setSuccessful(true);
         dispatchAction({ type: SIGN_UP_SUCCESS_ACTION });
       } catch (err) {
@@ -201,7 +192,7 @@ function SignUp({ signUpDispatch }) {
             <FontAwesomeIcon icon={faUserClock} className="icon" />
 
             <TDatePicker
-              selected={signupData.birth_date}
+              selected={birthDate}
               setStartDate={setStartDate}
               className="form-control "
             />
