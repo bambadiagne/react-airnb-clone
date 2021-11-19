@@ -66,36 +66,16 @@ function Navbar({ userStatus, logOutDispatch }) {
           )}
         </ul>
         <ul className="navbar-nav ms-auto ">
-          {!userStatus.isLoggedIn || (user && user.profile === "locateur") ? (
-            ""
-          ) : (
-            <Link
-              style={{ marginLeft: "5px" }}
-              to={"/reservations"}
-              className="nav-link  btn btn-success text-white "
-            >
-              Mes reservations
-            </Link>
-          )}
+         
 
-          {!userStatus.isLoggedIn || (user && user.profile === "locataire") ? (
-            ""
-          ) : (
-            <Link
-              style={{ marginLeft: "5px" }}
-              to={"/annonces"}
-              className="nav-link  btn btn-success text-white "
-            >
-              Annonces
-            </Link>
-          )}
+        
           {!userStatus.isLoggedIn ? (
             ""
           ) : (
             <Link
               style={{ marginLeft: "5px" }}
               to={"/profile"}
-              className="= nav-link  btn btn-danger text-white "
+              className="= nav-link  btn btn-success text-white "
             >
               Mon profile
             </Link>
