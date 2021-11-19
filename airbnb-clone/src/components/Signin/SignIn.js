@@ -60,7 +60,7 @@ function SignIn({ signInDispatch }) {
         })
         .catch((err) => {
           console.log("err", err);
-          setErrors({ errors: err });
+          setErrors({ errors: [err] });
           signInDispatch({ type: SIGN_IN_FAIL_ACTION });
         });
     }
