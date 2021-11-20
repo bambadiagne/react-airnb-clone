@@ -102,7 +102,18 @@ function Navbar({ userStatus, logOutDispatch }) {
               Connexion
             </Link>
           )}
-
+    {!userStatus.isLoggedIn ? (
+            ""
+          ) : (
+            <Link
+            style={{ marginLeft: "5px" }}
+            to={"/annonces"}
+            className="nav-link  btn btn-success text-white "
+          >
+            Annonces
+          </Link>
+          )}
+      
           {!userStatus.isLoggedIn ? (
             ""
           ) : (

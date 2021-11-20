@@ -10,6 +10,7 @@ import RoomPage from "./components/Room/RoomPage/RoomPage";
 import Annonce from "./components/Annonce/Annonce";
 import ReservationList from "./components/Reservations/ReservationList/ReservationList";
 import "./css/room.css";
+import UpdateRoom from "./components/Room/UpdateRoom/UpdateRoom";
 function App() {
   return (
     <div className="App">
@@ -22,6 +23,7 @@ function App() {
             <Route exact path={"/profile"} component={() => <Profile />} />
             <Route exact path={"/rooms"} component={RoomList} />
             <Route exact path={"/rooms/:id"} component={RoomPage} />
+            <Route exact path={"/room/update/:id"} component={UpdateRoom} />
             <Route exact path={"/reservations"} component={ReservationList} />
             <Route exact path={"/annonces"} component={Annonce} />
           </Switch>

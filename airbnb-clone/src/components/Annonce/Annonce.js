@@ -1,24 +1,42 @@
-import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
-import {
-  faBriefcase,
-  faDollarSign,
-  faHome,
-  faLock,
-  faUser,
-} from "@fortawesome/fontawesome-free-solid";
+import React, { useEffect, useState } from "react";
+import { Redirect } from "react-router";
 import { connect } from "react-redux";
 import NewRoom from "../Room/NewRoom/NewRoom";
-
-export default function Annonce() {
+import RoomService from "../../services/room/room-service";
+import { GET_ALL_ROOMS } from "../../actions/room/types";
+import SingleAnnonce from "./SingleAnnonce/SingleAnnonce";
+ function Annonce({user,annonceDispatch,rooms}) {
   const [showPart, setShowPart] = useState({
     annonces: false,
-    reservations: false,
     creationChambre: false,
   });
+  useEffect(()=>{
+    if(user){
+      RoomService.getAllRoomsByLandlord(user.id).then((res)=>{
+        annonceDispatch({type:GET_ALL_ROOMS,payload:res})
+      })
+  
+    }
+  
+  },[])
+  const showAnnonces=()=>{
+    if(user){
+      RoomService.getAllRoomsByLandlord(user.id).then((res)=>{
+        annonceDispatch({type:GET_ALL_ROOMS,payload:res})
+      })
+  
+    }
+  
+    setShowPart({
+      ...showPart,
+      annonces: true,
+      reservations: false,
+      creationChambre: false,
+    })
+  }
   return (
     <div>
+      {user?<div>
       <br /> <br /> <br />
       <h1 className="text-center text-white">Gestion annonces</h1>
       <div>
@@ -33,35 +51,14 @@ export default function Annonce() {
               })
             }
             className="btn btn-primary "
-            style={{ margin: "1%" }}
+            style={{flexBasis:"30%",flexGrow:1,flexShrink:1}}
           >
             Création chambre
           </button>
           <button
-            onClick={() =>
-              setShowPart({
-                ...showPart,
-                annonces: false,
-                reservations: true,
-                creationChambre: false,
-              })
-            }
+            onClick={showAnnonces}
             className="btn btn-primary "
-            style={{ margin: "1%" }}
-          >
-            Reservations
-          </button>
-          <button
-            onClick={() =>
-              setShowPart({
-                ...showPart,
-                annonces: true,
-                reservations: false,
-                creationChambre: false,
-              })
-            }
-            className="btn btn-primary "
-            style={{ margin: "1%" }}
+            style={{flexBasis:"30%",flexGrow:1,flexShrink:1}}
           >
             Mes annonces
           </button>
@@ -70,10 +67,31 @@ export default function Annonce() {
       {showPart.creationChambre ? (
         <div>
           <NewRoom />
+          
         </div>
       ) : (
         ""
       )}
-    </div>
-  );
+      {showPart.annonces?<div>
+        <div className="d-flex flex-wrap flex-column flex-md-row ">
+        {rooms.map((room) => (<SingleAnnonce key={room.id} room={room} />
+        ))}
+      </div>
+      </div>:''}
+    </div>:<Redirect to='/signin' />}
+    </div>  );
 }
+function mapStateToProps(state) {
+  return {
+    user: state.auth.user,
+    rooms:state.room,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    annonceDispatch: (action) => dispatch(action),
+  };
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Annonce);

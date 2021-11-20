@@ -37,6 +37,21 @@ class ReservationService {
         });
     });
   }
+  getSingleReservationByRoom(roomPropriety) {
+    const foundReservations=[];
+     
+    this.getAllReservationsByLandlord(roomPropriety.userId).then((res)=>{
+      res.forEach(reservation => {
+        if(roomPropriety.roomId===reservation.room){
+          console.log(reservation);  
+          foundReservations.push(reservation);
+        }       
+      });;
+
+    })
+    return foundReservations;
+  }
+  
   deleteSingleReservation(id) {
     return new Promise((resolve, reject) => {
       axios

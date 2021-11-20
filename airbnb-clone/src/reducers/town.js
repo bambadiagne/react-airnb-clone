@@ -7,7 +7,8 @@ export default function (state = initialState, action) {
     switch(type){
         case GET_ALL_TOWNS:
             return [...initialState,payload]
-        default
+        default:
+        return state;
         }
 
 }  

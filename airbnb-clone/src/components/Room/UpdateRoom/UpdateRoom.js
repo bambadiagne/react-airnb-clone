@@ -10,32 +10,41 @@ import { connect } from "react-redux";
 import RoomService from "../../../services/room/room-service";
 import TownService from "../../../services/town/town-service";
 import { GET_ALL_TOWNS } from "../../../actions/towns/types";
-import { CREATE_ROOM } from "../../../actions/room/types";
-function NewRoom({ roomDispatch, user }) {
-  const [towns, setTown] = useState([]);
-  useEffect(() => {
-    TownService.getAllTowns()
-      .then((res) => {
-        roomDispatch({ type: GET_ALL_TOWNS, payload: res });
-        setTown(res);
-      })
-      .catch((err) => {});
-  }, []);
-
-  const townData = {
-    landlord: user.id,
-    capacity: null,
-    price: null,
-    town: null,
-  };
-  const [successful, setSuccessful] = useState(false);
-  const [newTownData, setnewTownData] = useState(townData);
+import { RETRIEVE_ROOM,CREATE_ROOM,UPDATE_ROOM } from "../../../actions/room/types";
+import { useParams } from "react-router";
+function UpdateRoom({ roomDispatch, user }) {
+    const { id } = useParams();
+    const [room, setRoom] = useState({
+      town: "",
+      capacity: "",
+      price: "",
+    });
+    useEffect(() => {
+        TownService.getAllTowns()
+        .then((res) => {
+          roomDispatch({ type: GET_ALL_TOWNS, payload: res });
+          setTown(res);
+        })
+        .catch((err) => {});
+        RoomService.getSingleRoom(id)
+        .then((res) => {
+          setRoom(res);
+          roomDispatch({ type: RETRIEVE_ROOM, payload: res });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }, []);
+    const [towns, setTown] = useState([]);
+ 
+ 
+   const [successful, setSuccessful] = useState(false);
   const [errors, setErrors] = useState({ errors: [] });
   const handleChange = (e) => {
     if (e.target.id === "price" || e.target.id === "capacity") {
-      setnewTownData({ ...newTownData, [e.target.id]: Number(e.target.value) });
+      setRoom({ ...room, [e.target.id]: Number(e.target.value) });
     } else {
-      setnewTownData({ ...newTownData, [e.target.id]: e.target.value });
+      setRoom({ ...room, [e.target.id]: e.target.value });
     }
   };
 
@@ -59,19 +68,19 @@ function NewRoom({ roomDispatch, user }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { capacity, price, town } = newTownData;
+    const { capacity, price, town } = room;
 
-    if (validateTownData(newTownData)) {
-      setnewTownData({
-        ...townData,
+    if (validateTownData(room)) {
+      setRoom({
+        ...room,
         capacity: Number(capacity),
         price: Number(price),
       });
-   
-      RoomService.createNewRoom(newTownData)
+    
+      RoomService.UpdateSingleRoom(room.id,room)
         .then((res) => {
           setSuccessful(true);
-          roomDispatch({ type: CREATE_ROOM, payload: newTownData });
+          roomDispatch({ type: UPDATE_ROOM, payload: room });
         })
         .catch((err) => {
           console.log("err", err);
@@ -96,10 +105,10 @@ function NewRoom({ roomDispatch, user }) {
           className="alert alert-success justify-content-center"
           role="alert"
         >
-          Creation réussie !
+          Modification réussie !
         </div>
 
-        <h2>Nouvelle chambre</h2>
+        <h2>Modifier chambre</h2>
         <label>Ville</label>
 
         <div className="form-group input-container">
@@ -109,8 +118,9 @@ function NewRoom({ roomDispatch, user }) {
             onChange={handleChange}
             className="form-select"
             aria-label="Choisissez une ville"
+            defaultValue={room.town}
           >
-            <option defaultValue>Choisissez une ville</option>
+            <option >{room.town}</option>
             {towns.map((town) => (
               <option key={town.name} value={town.name}>
                 {town.name}
@@ -129,7 +139,7 @@ function NewRoom({ roomDispatch, user }) {
             onChange={handleChange}
             className="form-control input-field"
             name="capacity"
-            placeholder="0"
+            placeholder={room.capacity}
           />
         </div>
         <br />
@@ -144,6 +154,7 @@ function NewRoom({ roomDispatch, user }) {
             onChange={handleChange}
             className="form-control input-field"
             name="price"
+            placeholder={room.price}
           />
         </div>
         <br />
@@ -166,4 +177,4 @@ function mapDispatchToProps(dispatch) {
 function mapStateToProps(state) {
   return { user: state.auth.user };
 }
-export default connect(mapStateToProps, mapDispatchToProps)(NewRoom);
+export default connect(mapStateToProps, mapDispatchToProps)(UpdateRoom);

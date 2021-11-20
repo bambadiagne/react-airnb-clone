@@ -193,10 +193,10 @@ function Reservation({ reservationDispatch, reservation, user }) {
             <button className="btn col-4 mr-2  btn-flex btn-success">
               Annuler
             </button>
-            <button className="btn col-4 ml-2 btn-flex col-5  btn-warning">
+            <button className="btn col-4 ml-2 btn-flex   btn-warning">
               Modifier
             </button>
-            <button className="btn col-4 ml-2 btn-flex col-5  btn-danger">
+            <button className="btn col-4 ml-2 btn-flex   btn-danger">
               Supprimer
             </button>
           </div>

@@ -26,6 +26,18 @@ class RoomService {
         });
     });
   }
+  getAllRoomsByLandlord(id) {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(API_URL + `rooms/${id}`)
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
   getSingleRoom(id) {
     return new Promise((resolve, reject) => {
       axios
@@ -50,6 +62,7 @@ class RoomService {
         });
     });
   }
+
   UpdateSingleRoom(id, roomData) {
     return new Promise((resolve, reject) => {
       axios
