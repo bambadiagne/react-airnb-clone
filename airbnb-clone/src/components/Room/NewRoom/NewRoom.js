@@ -67,7 +67,7 @@ function NewRoom({ roomDispatch, user }) {
         capacity: Number(capacity),
         price: Number(price),
       });
-   
+
       RoomService.createNewRoom(newTownData)
         .then((res) => {
           setSuccessful(true);

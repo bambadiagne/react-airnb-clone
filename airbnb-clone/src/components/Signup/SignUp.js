@@ -28,7 +28,7 @@ function SignUp({ signUpDispatch }) {
     first_name: null,
     last_name: null,
     mail_address: null,
-    birth_date: '',
+    birth_date: "",
     gender: null,
     confirmationPassword: null,
     username: null,
@@ -94,12 +94,22 @@ function SignUp({ signUpDispatch }) {
 
     if (validateuserData(signupData)) {
       if (profile === "locataire") {
-        user = { ...signupData,    birth_date: birthDate.toISOString().split("T")[0], balance: 0, profile: profile };
+        user = {
+          ...signupData,
+          birth_date: birthDate.toISOString().split("T")[0],
+          balance: 0,
+          profile: profile,
+        };
       } else {
-        user = { ...signupData,     birth_date: birthDate.toISOString().split("T")[0],benefits: 0, profile: profile };
+        user = {
+          ...signupData,
+          birth_date: birthDate.toISOString().split("T")[0],
+          benefits: 0,
+          profile: profile,
+        };
       }
       console.log("user", user);
-     try {
+      try {
         const res = await AuthService.register(user);
         setSuccessful(true);
         dispatchAction({ type: SIGN_UP_SUCCESS_ACTION });

@@ -10,35 +10,38 @@ import { connect } from "react-redux";
 import RoomService from "../../../services/room/room-service";
 import TownService from "../../../services/town/town-service";
 import { GET_ALL_TOWNS } from "../../../actions/towns/types";
-import { RETRIEVE_ROOM,CREATE_ROOM,UPDATE_ROOM } from "../../../actions/room/types";
+import {
+  RETRIEVE_ROOM,
+  CREATE_ROOM,
+  UPDATE_ROOM,
+} from "../../../actions/room/types";
 import { useParams } from "react-router";
 function UpdateRoom({ roomDispatch, user }) {
-    const { id } = useParams();
-    const [room, setRoom] = useState({
-      town: "",
-      capacity: "",
-      price: "",
-    });
-    useEffect(() => {
-        TownService.getAllTowns()
-        .then((res) => {
-          roomDispatch({ type: GET_ALL_TOWNS, payload: res });
-          setTown(res);
-        })
-        .catch((err) => {});
-        RoomService.getSingleRoom(id)
-        .then((res) => {
-          setRoom(res);
-          roomDispatch({ type: RETRIEVE_ROOM, payload: res });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }, []);
-    const [towns, setTown] = useState([]);
- 
- 
-   const [successful, setSuccessful] = useState(false);
+  const { id } = useParams();
+  const [room, setRoom] = useState({
+    town: "",
+    capacity: "",
+    price: "",
+  });
+  useEffect(() => {
+    TownService.getAllTowns()
+      .then((res) => {
+        roomDispatch({ type: GET_ALL_TOWNS, payload: res });
+        setTown(res);
+      })
+      .catch((err) => {});
+    RoomService.getSingleRoom(id)
+      .then((res) => {
+        setRoom(res);
+        roomDispatch({ type: RETRIEVE_ROOM, payload: res });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+  const [towns, setTown] = useState([]);
+
+  const [successful, setSuccessful] = useState(false);
   const [errors, setErrors] = useState({ errors: [] });
   const handleChange = (e) => {
     if (e.target.id === "price" || e.target.id === "capacity") {
@@ -76,8 +79,8 @@ function UpdateRoom({ roomDispatch, user }) {
         capacity: Number(capacity),
         price: Number(price),
       });
-    
-      RoomService.UpdateSingleRoom(room.id,room)
+
+      RoomService.UpdateSingleRoom(room.id, room)
         .then((res) => {
           setSuccessful(true);
           roomDispatch({ type: UPDATE_ROOM, payload: room });
@@ -120,7 +123,7 @@ function UpdateRoom({ roomDispatch, user }) {
             aria-label="Choisissez une ville"
             defaultValue={room.town}
           >
-            <option >{room.town}</option>
+            <option>{room.town}</option>
             {towns.map((town) => (
               <option key={town.name} value={town.name}>
                 {town.name}

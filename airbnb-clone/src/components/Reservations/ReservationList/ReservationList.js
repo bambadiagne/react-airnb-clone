@@ -11,7 +11,7 @@ function ReservationList({ user, reservationAction }) {
       if (user.profile === "locateur") {
         ReservationService.getAllReservationsByLandlord(user.id)
           .then((res) => {
-            console.log('nice');
+            console.log("nice");
             setReservations(res);
             reservationAction({ type: GET_ALL_RESERVATIONS, payload: res });
           }, [])
