@@ -96,5 +96,19 @@ class RoomService {
       }
     });
   }
+  getRoomsbyQuery(query) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const allrooms = await this.getAllRooms();
+        if (allrooms) {
+          const rooms = allrooms.filter((room) => query.town === room.town);
+          resolve(rooms);
+        }
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
 }
+
 export default new RoomService();

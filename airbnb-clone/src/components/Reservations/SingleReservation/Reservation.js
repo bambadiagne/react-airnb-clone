@@ -46,7 +46,6 @@ function Reservation({ reservationDispatch, reservation, user }) {
     if (!modifyCapacity) {
       errorsForm.push("La capacité est obligatoire");
     } else if (modifyCapacity > room.capacity) {
-      console.log("ssd");
       errorsForm.push("Nombre de places superieur à la capacité");
     }
     if (!firstDate) {

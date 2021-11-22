@@ -25,8 +25,8 @@ function Room({ room, user }) {
         <div className="">
           <Link
             to={`/rooms/${room.id}`}
-            style={{ backgroundColor: "#108ffd" }}
-            className="btn col-12 "
+            style={{ backgroundColor: "#ff4b5a" }}
+            className="btn  col-12 "
           >
             Consulter
           </Link>

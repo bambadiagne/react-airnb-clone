@@ -4,13 +4,11 @@ import RoomService from "../../../services/room/room-service";
 import { GET_ALL_ROOMS } from "../../../actions/room/types";
 import Room from "../SingleRoom/Room";
 import SearchBar from "../../SearchBar/SearchBar";
-function RoomList({ roomDispatch }) {
-  const [roomsList, setRooms] = useState([]);
+function RoomList({ roomDispatch, rooms }) {
   useEffect(() => {
     RoomService.getAllRooms()
       .then((res) => {
         console.log(res);
-        setRooms(res);
         roomDispatch({
           type: GET_ALL_ROOMS,
           payload: res,
@@ -29,7 +27,7 @@ function RoomList({ roomDispatch }) {
       <br />
 
       <div className="d-flex flex-wrap flex-column flex-md-row ">
-        {roomsList.map((room) => (
+        {rooms.map((room) => (
           <Room key={room.id} room={room} />
         ))}
       </div>

@@ -1,4 +1,4 @@
-import { faUser } from "@fortawesome/fontawesome-free-solid";
+import { faHome } from "@fortawesome/fontawesome-free-solid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { connect } from "react-redux";
@@ -21,8 +21,9 @@ function Navbar({ userStatus, logOutDispatch }) {
   const handleNavCollapse = () => setIsNavCollapsed(!isNavCollapsed);
   return (
     <nav className="fixed-top navbar navbar-expand-lg navbar-light bg-primary">
-      <Link className="navbar-brand" to="/">
+      <Link className="navbar-brand text-white" to="/">
         AIRBNB
+        <FontAwesomeIcon icon={faHome} />
       </Link>
       <button
         className="navbar-toggler"
@@ -43,7 +44,7 @@ function Navbar({ userStatus, logOutDispatch }) {
       >
         <ul className="navbar-nav topnav">
           <li className="nav-item active">
-            <Link className="nav-link" to="/">
+            <Link className="nav-link text-white" to="/">
               Home <span className="sr-only"></span>
             </Link>
           </li>
@@ -51,7 +52,7 @@ function Navbar({ userStatus, logOutDispatch }) {
             <Link className="nav-link" to="/"></Link>
           </li>
           <li className="nav-item">
-            <Link to={"/rooms"} className="nav-link">
+            <Link to={"/rooms"} className="nav-link text-white">
               Chambres
             </Link>
           </li>
@@ -59,8 +60,17 @@ function Navbar({ userStatus, logOutDispatch }) {
             ""
           ) : (
             <li className="nav-item">
-              <Link to={"/reservations"} className="nav-link">
+              <Link to={"/reservations"} className="nav-link text-white">
                 Reservations
+              </Link>
+            </li>
+          )}
+          {!userStatus.isLoggedIn || user.profile !== "locateur" ? (
+            ""
+          ) : (
+            <li className="nav-item">
+              <Link to={"/annonces"} className="nav-link  text-white ">
+                Annonces
               </Link>
             </li>
           )}
@@ -97,17 +107,6 @@ function Navbar({ userStatus, logOutDispatch }) {
               className="nav-link  btn btn-danger text-white "
             >
               Connexion
-            </Link>
-          )}
-          {!userStatus.isLoggedIn ? (
-            ""
-          ) : (
-            <Link
-              style={{ marginLeft: "5px" }}
-              to={"/annonces"}
-              className="nav-link  btn btn-success text-white "
-            >
-              Annonces
             </Link>
           )}
 
