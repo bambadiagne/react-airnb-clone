@@ -76,6 +76,7 @@ function Reservation({ reservationDispatch, reservation, user }) {
             payload: reservation,
           });
           setCancelSuccess({ ...cancelSuccess, cancel: true });
+          window.location = "/reservations";
         })
         .catch((err) => {});
     }
@@ -97,6 +98,7 @@ function Reservation({ reservationDispatch, reservation, user }) {
       })
         .then((res) => {
           setCancelSuccess({ ...cancelSuccess, modify: true });
+          window.location = "/reservations";
         })
         .catch((err) => {});
     }

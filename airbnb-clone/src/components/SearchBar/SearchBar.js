@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/fontawesome-free-solid";
+import { faRedo, faSearch } from "@fortawesome/fontawesome-free-solid";
 import { connect } from "react-redux";
 import { GET_ALL_TOWNS } from "../../actions/towns/types";
-import { RETRIEVE_ROOM } from "../../actions/room/types";
+import { GET_ALL_ROOMS, RETRIEVE_ROOM } from "../../actions/room/types";
 import DatePicker from "react-datepicker";
 import TownService from "../../services/town/town-service";
 import "../../css/searchbar.css";
@@ -14,19 +14,18 @@ function SearchBar({ searchBarDispatch }) {
     return new Date(...tabDate);
   };
   const [errors, setErrors] = useState({ errors: [] });
-
+  const currentDay = new Date();
   const [towns, setTown] = useState([]);
   const [searchFilter, setSearchFilter] = useState({
     town: null,
-    in_date: new Date().toISOString().split("T")[0],
-    out_date: new Date().toISOString().split("T")[0],
-    minPrice: 1,
+    in_date: "",
+    out_date: "",
+    minPrice: "",
     maxPrice: null,
     capacity: 0,
   });
-  const [firstDate, setFirstDate] = useState(new Date());
-  const [lastDate, setLastDate] = useState(new Date());
-
+  const [firstDate, setFirstDate] = useState(currentDay);
+  const [lastDate, setLastDate] = useState(currentDay);
   useEffect(() => {
     TownService.getAllTowns()
       .then((res) => {
@@ -50,7 +49,7 @@ function SearchBar({ searchBarDispatch }) {
     }
   };
   const validateFilter = (filterData) => {
-    const { town, minPrice, maxPrice, capacity } = filterData;
+    const { town } = filterData;
     const errorsFilter = [];
     if (!town) {
       errorsFilter.push("Vous devez spécifier une ville");
@@ -58,20 +57,33 @@ function SearchBar({ searchBarDispatch }) {
     setErrors({ ...errors, errors: errorsFilter });
     return errorsFilter.length === 0;
   };
+  const reinitRooms = (e) => {
+    e.preventDefault();
+    setSearchFilter({
+      ...searchFilter,
+      town: null,
+      in_date: "",
+      out_date: "",
+      minPrice: "",
+      maxPrice: null,
+      capacity: 0,
+    });
+    RoomService.getAllRooms().then((res) => {
+      searchBarDispatch({ type: GET_ALL_ROOMS, payload: res });
+    });
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateFilter(searchFilter)) {
-      setSearchFilter({
-        ...searchFilter,
-        in_date: firstDate.toISOString().split("T")[0],
-        out_date: lastDate.toISOString().split("T")[0],
-      });
-      console.log("OK");
+      if (lastDate > currentDay) {
+        setSearchFilter({
+          ...searchFilter,
+          out_date: lastDate.toISOString().split("T")[0],
+        });
+      }
+
       RoomService.getRoomsbyQuery(searchFilter)
         .then((res) => {
-          console.log("====================================");
-          console.log("Chambres dispo", res);
-          console.log("====================================");
           searchBarDispatch({ type: RETRIEVE_ROOM, payload: res });
         })
         .catch((err) => {
@@ -88,7 +100,7 @@ function SearchBar({ searchBarDispatch }) {
           </li>
         ))}
       </ul>
-      <div onSubmit={handleSubmit} className="form-search">
+      <div className="form-search">
         <form>
           <div className="">
             <div className="row">
@@ -162,13 +174,23 @@ function SearchBar({ searchBarDispatch }) {
           </div>
           <br />
           <div className="d-flex button-box">
-            <button className="btn  search-button">
-              {" "}
+            <button onClick={handleSubmit} className="btn  search-button">
               Rechercher{" "}
               <FontAwesomeIcon
                 icon={faSearch}
-                style={{ backgroundColor: "#ff4b5a", color: "#fff" }}
+                style={{
+                  backgroundColor: "#ff4b5a",
+                  color: "#fff",
+                  marginLeft: "10px",
+                }}
               />
+            </button>
+            <button
+              onClick={reinitRooms}
+              style={{ backgroundColor: "green" }}
+              className="btn search-button"
+            >
+              Reinitialiser <FontAwesomeIcon icon={faRedo} />
             </button>
           </div>
           <br />
