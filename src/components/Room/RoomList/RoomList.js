@@ -8,7 +8,6 @@ function RoomList({ roomDispatch, rooms }) {
   useEffect(() => {
     RoomService.getAllRooms()
       .then((res) => {
-        console.log(res);
         roomDispatch({
           type: GET_ALL_ROOMS,
           payload: res,
@@ -16,7 +15,6 @@ function RoomList({ roomDispatch, rooms }) {
       })
       .catch((err) => {});
   }, []);
-
   return (
     <div className="container-fluid home">
       <h1 className="text-white text-center">Liste des chambres</h1>
@@ -26,11 +24,15 @@ function RoomList({ roomDispatch, rooms }) {
       <br />
       <br />
 
-      <div className="d-flex flex-wrap flex-column flex-md-row ">
-        {rooms.map((room) => (
-          <Room key={room.id} room={room} />
-        ))}
-      </div>
+      {rooms.length > 0 ? (
+        <div className="d-flex flex-wrap flex-column flex-md-row ">
+          {rooms.map((room) => (
+            <Room key={room.id} room={room} />
+          ))}
+        </div>
+      ) : (
+        0
+      )}
     </div>
   );
 }

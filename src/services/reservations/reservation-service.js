@@ -1,6 +1,19 @@
 import axios from "axios";
 import { API_URL } from "../constantes";
 class ReservationService {
+  createNewReservation(reservationData) {
+    return new Promise((resolve, reject) => {
+      axios
+        .post(API_URL + `reservations`, reservationData)
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
+
   getAllReservationsByTenant(tenant_id) {
     return new Promise((resolve, reject) => {
       axios

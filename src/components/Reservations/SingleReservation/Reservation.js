@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
 import {
   faHome,
   faUser,
   faPaperPlane,
   faUserClock,
+  faSignOutAlt,
 } from "@fortawesome/fontawesome-free-solid";
 import { connect } from "react-redux";
 import RoomService from "../../../services/room/room-service";
@@ -59,7 +59,6 @@ function Reservation({ reservationDispatch, reservation, user }) {
   }
   useEffect(() => {
     RoomService.getSingleRoom(reservation.room).then((res) => {
-      reservationDispatch({ type: RETRIEVE_ROOM, payload: res });
       setRoom(res);
     });
     TenantService.getSingleTenant(reservation.tenant).then((res) => {
@@ -87,6 +86,16 @@ function Reservation({ reservationDispatch, reservation, user }) {
       showModify: !cancelSuccess.showModify,
     });
   };
+  const confirmerReservation = (e) => {
+    e.preventDefault();
+    ReservationService.UpdateSingleReservation(reservation.id, {
+      ...reservation,
+      status: "A",
+    }).then((res) => {
+      setCancelSuccess({ ...cancelSuccess, showModify: false, modify: true });
+      reservation.status = "P";
+    });
+  };
   const modifyReservation = (e) => {
     e.preventDefault();
     if (validateuserData()) {
@@ -98,6 +107,12 @@ function Reservation({ reservationDispatch, reservation, user }) {
       })
         .then((res) => {
           setCancelSuccess({ ...cancelSuccess, modify: true });
+          reservation = {
+            ...reservation,
+            nbr_persons: modifyCapacity,
+            in_date: firstDate.toISOString().split("T")[0],
+            out_date: lastDate.toISOString().split("T")[0],
+          };
           window.location = "/reservations";
         })
         .catch((err) => {});
@@ -138,6 +153,28 @@ function Reservation({ reservationDispatch, reservation, user }) {
           Capacité reservée : {reservation.nbr_persons}
         </h5>
       </div>
+      <div className="row">
+        <div className="col">
+          {" "}
+          <h5 className="text-center text-white ">
+            <FontAwesomeIcon
+              icon={faSignOutAlt}
+              className=" flex-row bg-primary"
+            />
+            Début <br /> {reservation.in_date}
+          </h5>
+        </div>
+        <div className="col">
+          {" "}
+          <h5 className="text-center text-white ">
+            <FontAwesomeIcon
+              icon={faSignOutAlt}
+              className=" flex-row bg-primary"
+            />
+            Fin <br /> {reservation.out_date}
+          </h5>
+        </div>
+      </div>
 
       <div>
         <h5 className="text-white text-center">
@@ -154,7 +191,7 @@ function Reservation({ reservationDispatch, reservation, user }) {
         )}
         {reservation.status === "P" ? (
           <h5 className="text-center text-white ">
-            Statut :{" "}
+            Statut :
             <span className="text-center badge alert-warning">En attente</span>
           </h5>
         ) : (
@@ -162,7 +199,7 @@ function Reservation({ reservationDispatch, reservation, user }) {
         )}
         {reservation.status === "E" ? (
           <h5 className="text-center text-white ">
-            Statut :{" "}
+            Statut :
             <span className="text-center badge alert-danger">Expirée</span>
           </h5>
         ) : (
@@ -182,6 +219,7 @@ function Reservation({ reservationDispatch, reservation, user }) {
             <button
               onClick={showReservation}
               className="btn col-6 ml-2 btn-flex col-5  btn-warning"
+              disabled={reservation.status === "A"}
             >
               Modifier
             </button>
@@ -191,73 +229,77 @@ function Reservation({ reservationDispatch, reservation, user }) {
         )}
         {user.profile === "locateur" ? (
           <div className="d-flex flex-row">
-            <button className="btn col-4 mr-2  btn-flex btn-success">
-              Annuler
-            </button>
-            <button className="btn col-4 ml-2 btn-flex   btn-warning">
-              Modifier
-            </button>
-            <button className="btn col-4 ml-2 btn-flex   btn-danger">
-              Supprimer
+            <button
+              onClick={confirmerReservation}
+              className="btn col-12 btn-lg btn-flex btn-success"
+            >
+              Confirmer
             </button>
           </div>
         ) : (
           ""
         )}
       </div>
-      <div className="bg-white" hidden={!cancelSuccess.showModify}>
-        <form onSubmit={modifyReservation}>
-          <div className="form-group">
-            <label>
-              <FontAwesomeIcon icon={faUser} className=" flex-row bg-primary" />
-              Capacité
-            </label>
-            <input
-              className="form-control"
-              onChange={(e) => setModifyReservation(e.target.value)}
-              id="capacity"
-              type="number"
-            />
-          </div>
-          <div className="form-group ">
-            <FontAwesomeIcon icon={faUserClock} className="icon" />
-            <DatePicker
-              selected={firstDate}
-              onChange={(date) => setFirstDate(date)}
-              isClearable
-              placeholderText="I have been cleared!"
-            />{" "}
-          </div>
-          <div className="form-group ">
-            <FontAwesomeIcon icon={faUserClock} className="icon" />
-            <DatePicker
-              selected={lastDate}
-              onChange={(date) => setLastDate(date)}
-              isClearable
-              placeholderText="I have been cleared!"
-            />{" "}
-          </div>
+      {user.profile === "locataire" ? (
+        <div hidden={!cancelSuccess.showModify} className="bg-white rounded">
+          <form onSubmit={modifyReservation}>
+            <div className="form-group">
+              <label>
+                <FontAwesomeIcon
+                  icon={faUser}
+                  className=" flex-row bg-primary"
+                />
+                Capacité
+              </label>
+              <input
+                className="form-control"
+                onChange={(e) => setModifyReservation(e.target.value)}
+                id="capacity"
+                type="number"
+              />
+            </div>
+            <div className="form-group ">
+              <FontAwesomeIcon icon={faUserClock} className="icon" />
+              <DatePicker
+                selected={firstDate}
+                onChange={(date) => setFirstDate(date)}
+                isClearable
+                placeholderText="I have been cleared!"
+              />{" "}
+            </div>
+            <div className="form-group ">
+              <FontAwesomeIcon icon={faUserClock} className="icon" />
+              <DatePicker
+                selected={lastDate}
+                onChange={(date) => setLastDate(date)}
+                isClearable
+                placeholderText="I have been cleared!"
+              />{" "}
+            </div>
 
-          <div className="form-group ">
-            <button
-              type="submit"
-              className="col-12 btn btn-primary btn-lg btn-block"
-            >
-              <FontAwesomeIcon
-                key={"plane1"}
-                icon={faPaperPlane}
-                style={{ float: "left" }}
-              />
-              Modifier
-              <FontAwesomeIcon
-                key={"plane2"}
-                icon={faPaperPlane}
-                style={{ float: "right" }}
-              />
-            </button>
-          </div>
-        </form>
-      </div>
+            <div className="form-group ">
+              <button
+                type="submit"
+                className="col-12 btn btn-primary btn-lg btn-block"
+              >
+                <FontAwesomeIcon
+                  key={"plane1"}
+                  icon={faPaperPlane}
+                  style={{ float: "left" }}
+                />
+                Modifier
+                <FontAwesomeIcon
+                  key={"plane2"}
+                  icon={faPaperPlane}
+                  style={{ float: "right" }}
+                />
+              </button>
+            </div>
+          </form>
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 }

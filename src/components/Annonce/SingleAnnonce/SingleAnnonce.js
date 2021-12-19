@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
-import { faHome, faUser } from "@fortawesome/fontawesome-free-solid";
+import {
+  faHome,
+  faUser,
+  faSignOutAlt,
+} from "@fortawesome/fontawesome-free-solid";
 import { connect } from "react-redux";
 import ReservationService from "../../../services/reservations/reservation-service";
 import RoomService from "../../../services/room/room-service";
@@ -61,6 +65,18 @@ function Room({ room, user, annonceDispatch }) {
           <FontAwesomeIcon icon={faUser} className=" flex-row bg-primary" />
           Capacité : {room.capacity}
         </h5>
+      </div>
+      <div className="row">
+        <div>
+          {" "}
+          <h5 className="text-center text-white ">
+            <FontAwesomeIcon
+              icon={faSignOutAlt}
+              className=" flex-row bg-primary"
+            />
+            Capacité : {room.capacity}
+          </h5>
+        </div>
       </div>
 
       <div>

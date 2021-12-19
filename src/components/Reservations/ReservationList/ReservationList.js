@@ -4,22 +4,22 @@ import Reservation from "../SingleReservation/Reservation";
 import ReservationService from "../../../services/reservations/reservation-service";
 import { GET_ALL_RESERVATIONS } from "../../../actions/reservation/types";
 import { Redirect } from "react-router";
-function ReservationList({ user, reservationAction }) {
-  const [reservations, setReservations] = useState([]);
+function ReservationList({ user, reservationAction, allReservations }) {
+  const [fetched, setFetched] = useState(false);
   useEffect(() => {
     if (user) {
       if (user.profile === "locateur") {
         ReservationService.getAllReservationsByLandlord(user.id)
           .then((res) => {
-            console.log("nice");
-            setReservations(res);
+            console.log("resland", res);
             reservationAction({ type: GET_ALL_RESERVATIONS, payload: res });
           }, [])
           .catch((err) => {});
       } else {
         ReservationService.getAllReservationsByTenant(user.id)
           .then((res) => {
-            setReservations(res);
+            console.log("restenant", res);
+
             reservationAction({ type: GET_ALL_RESERVATIONS, payload: res });
           })
           .catch((err) => {});
@@ -36,11 +36,15 @@ function ReservationList({ user, reservationAction }) {
           <br />
 
           <h1 className="text-white text-center">Liste des reservations</h1>
-          <div className="d-flex flex-wrap flex-column flex-md-row ">
-            {reservations.map((reservation) => (
-              <Reservation key={reservation.id} reservation={reservation} />
-            ))}
-          </div>
+          {allReservations.length > 0 ? (
+            <div className="d-flex flex-wrap flex-column flex-md-row ">
+              {allReservations.map((reservation) => (
+                <Reservation key={reservation.id} reservation={reservation} />
+              ))}
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       ) : (
         <Redirect to="/signin" />

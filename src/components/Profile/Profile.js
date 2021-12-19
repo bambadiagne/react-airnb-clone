@@ -17,6 +17,7 @@ import {
 import { connect } from "react-redux";
 import TDatePicker from "../DatePicker/DatePicker";
 import TenantService from "../../services/tenant/tenant-service";
+import "../../css/profile.css";
 import LandlordService from "../../services/landlord/landlord-service";
 import { Redirect } from "react-router";
 function Profile({ signUpDispatch, user }) {
@@ -186,7 +187,7 @@ function Profile({ signUpDispatch, user }) {
         <div>
           <h1 className="text-center text-white">Page de profile</h1>
           <div className="d-flex flex-column flex-lg-row justify-content-around ">
-            <div style={{ backgroundColor: "#f2f3f7" }}>
+            <div>
               <h3 className=" rounded-lg border text-center">
                 Informations personnelles
               </h3>
@@ -198,7 +199,7 @@ function Profile({ signUpDispatch, user }) {
                 </h4>
                 <br />
                 <br />
-                <div className="justify-content-center bg-white">
+                <div className="justify-content-center">
                   <div className="input-container">
                     <FontAwesomeIcon
                       size="lg"
