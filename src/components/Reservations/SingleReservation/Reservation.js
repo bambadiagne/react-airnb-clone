@@ -155,7 +155,6 @@ function Reservation({ reservationDispatch, reservation, user }) {
       </div>
       <div className="row">
         <div className="col">
-          {" "}
           <h5 className="text-center text-white ">
             <FontAwesomeIcon
               icon={faSignOutAlt}
@@ -165,7 +164,6 @@ function Reservation({ reservationDispatch, reservation, user }) {
           </h5>
         </div>
         <div className="col">
-          {" "}
           <h5 className="text-center text-white ">
             <FontAwesomeIcon
               icon={faSignOutAlt}

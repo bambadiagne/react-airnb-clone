@@ -11,6 +11,7 @@ import Annonce from "./components/Annonce/Annonce";
 import ReservationList from "./components/Reservations/ReservationList/ReservationList";
 import "./css/room.css";
 import UpdateRoom from "./components/Room/UpdateRoom/UpdateRoom";
+import NotFound from "./components/NotFound/NotFound";
 function App() {
   return (
     <div className="App">
@@ -21,11 +22,12 @@ function App() {
             <Route exact path={"/signup"} component={() => <SignUp />} />
             <Route exact path={"/signin"} component={SignIn} />
             <Route exact path={"/profile"} component={() => <Profile />} />
-            <Route exact path={"/rooms"} component={RoomList} />
+            <Route exact path={"/(rooms|)/"} component={RoomList} />
             <Route exact path={"/rooms/:id"} component={RoomPage} />
             <Route exact path={"/room/update/:id"} component={UpdateRoom} />
             <Route exact path={"/reservations"} component={ReservationList} />
             <Route exact path={"/annonces"} component={Annonce} />
+            <Route component={NotFound} />
           </Switch>
         </div>
       </Router>

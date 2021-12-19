@@ -213,7 +213,7 @@ function RoomPage({ roomDispatch, user }) {
                   marginLeft: "auto",
                   marginRight: "auto",
                 }}
-                className="row"
+                className="d-flex flex-wrap flex-column flex-md-row"
               >
                 <div className=" col">
                   <label style={{ color: "#636363" }}>Départ</label>
