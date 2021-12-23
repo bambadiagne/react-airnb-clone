@@ -13,13 +13,17 @@ import {
 } from "@fortawesome/fontawesome-free-solid";
 import "../../../css/reservation.css";
 import ReservationService from "../../../services/reservations/reservation-service";
+import Spinner from "../../Spinner/Spinner";
 function RoomPage({ roomDispatch, user }) {
+  const [loading, setLoading] = useState(true);
   const [room, setRoom] = useState({});
   const { id } = useParams();
+
   const [changeReservation, setChangeReservation] = useState({
     showForm: false,
     reservationCreated: false,
   });
+  const isAuth = user ? true : false;
   const [errors, setErrors] = useState({ errors: [] });
   const currentDay = new Date();
   const [firstDate, setFirstDate] = useState(currentDay);
@@ -39,13 +43,14 @@ function RoomPage({ roomDispatch, user }) {
     RoomService.getSingleRoom(id)
       .then((res) => {
         setRoom(res);
+        setLoading(false);
+
         setReservation({
           ...reservation,
           room: res.id,
           landlord: res.landlord,
           tenant: user.id,
         });
-
         roomDispatch({ type: RETRIEVE_ROOM, payload: res });
       })
       .catch((err) => {
@@ -147,6 +152,7 @@ function RoomPage({ roomDispatch, user }) {
             }}
           >
             <button
+              disabled={!isAuth}
               style={{
                 width: "80%",
               }}
@@ -160,95 +166,104 @@ function RoomPage({ roomDispatch, user }) {
             >
               Réserver
             </button>
+            <div hidden={isAuth} className="row">
+              <span className="text-center text-light">
+                Connectez-vous pour réserver
+              </span>
+            </div>
           </div>
           <br />
           <br />
           <br />
-          <div hidden={!changeReservation.showForm}>
-            <form onSubmit={handleSubmit} className="bg-white rounded">
-              <br />
-              <ul>
-                {errors.errors.map((err) => (
-                  <li key={err} className="text-danger">
-                    {err}
-                  </li>
-                ))}
-              </ul>
+          {isAuth ? (
+            <div hidden={!changeReservation.showForm}>
+              <form onSubmit={handleSubmit} className="bg-white rounded">
+                <br />
+                <ul>
+                  {errors.errors.map((err) => (
+                    <li key={err} className="text-danger">
+                      {err}
+                    </li>
+                  ))}
+                </ul>
 
-              <h2 className="text-center">Nouvelle reservation</h2>
+                <h2 className="text-center">Nouvelle reservation</h2>
 
-              <label
-                style={{
-                  color: "#636363",
-                  width: "80%",
-                  marginLeft: "auto",
-                  marginRight: "auto",
-                }}
-              >
-                Nombre de places
-              </label>
-              <div
-                style={{
-                  width: "80%",
-                  marginLeft: "auto",
-                  marginRight: "auto",
-                }}
-                className="form-group input-container"
-              >
-                <FontAwesomeIcon icon={faUser} className="icon" />
-
-                <input
-                  type="number"
-                  id="nbr_persons"
-                  onChange={handleChange}
-                  className="form-control input-field"
-                  name="nbr_persons"
-                  placeholder="0"
-                />
-              </div>
-              <br />
-              <div
-                style={{
-                  width: "80%",
-                  marginLeft: "auto",
-                  marginRight: "auto",
-                }}
-                className="d-flex flex-wrap flex-column flex-md-row"
-              >
-                <div className=" col">
-                  <label style={{ color: "#636363" }}>Départ</label>
-                  <DatePicker
-                    selected={firstDate}
-                    onChange={(date) => setFirstDate(date)}
-                    placeholderText="Depart"
-                  />
-                </div>
-                <div className=" col">
-                  <label style={{ color: "#636363" }}>Arrivée</label>
-                  <DatePicker
-                    selected={lastDate}
-                    onChange={(date) => setLastDate(date)}
-                    placeholderText="Arrivée"
-                  />
-                </div>
-              </div>
-
-              <br />
-
-              <div className="form-group ">
-                <button
-                  type="submit"
-                  className="col-12 btn btn-primary btn-lg btn-block"
+                <label
+                  style={{
+                    color: "#636363",
+                    width: "80%",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                  }}
                 >
-                  Reserver{" "}
-                  <FontAwesomeIcon key={"circle"} icon={faPlusCircle} />
-                </button>
-              </div>
-            </form>
-          </div>
+                  Nombre de places
+                </label>
+                <div
+                  style={{
+                    width: "80%",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                  }}
+                  className="form-group input-container"
+                >
+                  <FontAwesomeIcon icon={faUser} className="icon" />
+
+                  <input
+                    type="number"
+                    id="nbr_persons"
+                    onChange={handleChange}
+                    className="form-control input-field"
+                    name="nbr_persons"
+                    placeholder="0"
+                  />
+                </div>
+                <div
+                  style={{
+                    width: "80%",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                  }}
+                  className="d-flex flex-wrap flex-column flex-md-row"
+                >
+                  <div className=" col">
+                    <label style={{ color: "#636363" }}>Départ</label>
+                    <DatePicker
+                      selected={firstDate}
+                      onChange={(date) => setFirstDate(date)}
+                      placeholderText="Depart"
+                    />
+                  </div>
+                  <div className=" col">
+                    <label style={{ color: "#636363" }}>Arrivée</label>
+                    <DatePicker
+                      selected={lastDate}
+                      onChange={(date) => setLastDate(date)}
+                      placeholderText="Arrivée"
+                    />
+                  </div>
+                </div>
+
+                <br />
+
+                <div className="form-group ">
+                  <button
+                    type="submit"
+                    className="col-12 btn btn-primary btn-lg btn-block"
+                  >
+                    Reserver{" "}
+                    <FontAwesomeIcon key={"circle"} icon={faPlusCircle} />
+                  </button>
+                </div>
+              </form>
+            </div>
+          ) : (
+            ""
+          )}
           <br />
         </div>
       </div>
+      <Spinner loading={loading} />
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.css";
 import "./App.css";
 import Navbar from "./components/Navbar/NavBar";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import SignUp from "./components/Signup/SignUp";
 import SignIn from "./components/Signin/SignIn";
 import Profile from "./components/Profile/Profile";

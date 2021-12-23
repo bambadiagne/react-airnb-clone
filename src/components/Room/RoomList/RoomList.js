@@ -4,7 +4,9 @@ import RoomService from "../../../services/room/room-service";
 import { GET_ALL_ROOMS } from "../../../actions/room/types";
 import Room from "../SingleRoom/Room";
 import SearchBar from "../../SearchBar/SearchBar";
+import Spinner from "../../Spinner/Spinner";
 function RoomList({ roomDispatch, rooms }) {
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     RoomService.getAllRooms()
       .then((res) => {
@@ -12,6 +14,9 @@ function RoomList({ roomDispatch, rooms }) {
           type: GET_ALL_ROOMS,
           payload: res,
         });
+        setTimeout(() => {
+          setLoading(false);
+        }, 2000);
       })
       .catch((err) => {});
   }, []);
@@ -33,6 +38,7 @@ function RoomList({ roomDispatch, rooms }) {
       ) : (
         0
       )}
+      <Spinner loading={loading} />
     </div>
   );
 }

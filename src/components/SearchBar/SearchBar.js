@@ -8,11 +8,9 @@ import DatePicker from "react-datepicker";
 import TownService from "../../services/town/town-service";
 import "../../css/searchbar.css";
 import RoomService from "../../services/room/room-service";
+import Spinner from "../Spinner/Spinner";
 function SearchBar({ searchBarDispatch }) {
-  const parseStringToDate = (date) => {
-    const tabDate = date.split("-").map((elt) => Number(elt));
-    return new Date(...tabDate);
-  };
+  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({ errors: [] });
   const currentDay = new Date();
   const [towns, setTown] = useState([]);
@@ -75,6 +73,7 @@ function SearchBar({ searchBarDispatch }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateFilter(searchFilter)) {
+      setLoading(true);
       if (lastDate > currentDay) {
         setSearchFilter({
           ...searchFilter,
@@ -89,6 +88,9 @@ function SearchBar({ searchBarDispatch }) {
         .catch((err) => {
           console.log("err", err);
         });
+      setTimeout(() => {
+        setLoading(false);
+      }, 1500);
     }
   };
   return (
@@ -122,7 +124,7 @@ function SearchBar({ searchBarDispatch }) {
                 </select>
               </div>
               <div className="col">
-                <label>Nombre de personnes</label>
+                <label>Personnes</label>
 
                 <input
                   className="form-control"
@@ -196,6 +198,7 @@ function SearchBar({ searchBarDispatch }) {
           <br />
         </form>
       </div>
+      <Spinner loading={loading} />
     </div>
   );
 }

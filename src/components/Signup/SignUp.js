@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../css/signup.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -12,17 +12,17 @@ import {
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import AuthService from "../../services/auth/auth-service";
-
 import TDatePicker from "../DatePicker/DatePicker";
 import {
   SIGN_UP_SUCCESS_ACTION,
   SIGN_UP_FAIL_ACTION,
 } from "../../actions/auth/types";
+import Spinner from "../Spinner/Spinner";
 function SignUp({ signUpDispatch }) {
   const dispatchAction = signUpDispatch;
+  const [loading, setLoading] = useState(false);
   const [successful, setSuccessful] = useState(false);
   const [birthDate, setStartDate] = useState(new Date());
-  const [profile, setProfile] = useState(null);
   const [errors, setErrors] = useState({ errors: [] });
   const userData = {
     first_name: null,
@@ -33,6 +33,7 @@ function SignUp({ signUpDispatch }) {
     confirmationPassword: null,
     username: null,
     password: null,
+    profile: null,
   };
   const [signupData, setSignupData] = useState(userData);
   const handleChange = (e) => {
@@ -53,7 +54,6 @@ function SignUp({ signUpDispatch }) {
       gender,
       password,
       profile,
-      birth_date,
     } = signup;
     if (!gender) {
       errorsForm.push("Le genre est obligatoire");
@@ -80,8 +80,6 @@ function SignUp({ signUpDispatch }) {
     }
     if (profile !== "locataire" && profile !== "locateur") {
       errorsForm.push("Profile Inconnu");
-    } else {
-      setProfile(profile);
     }
     setErrors({ ...errors, errors: errorsForm });
     return errorsForm.length === 0;
@@ -91,32 +89,40 @@ function SignUp({ signUpDispatch }) {
     e.preventDefault();
 
     let user;
-
+    setLoading(true);
     if (validateuserData(signupData)) {
-      if (profile === "locataire") {
+      if (signupData.profile === "locataire") {
         user = {
           ...signupData,
           birth_date: birthDate.toISOString().split("T")[0],
           balance: 0,
-          profile: profile,
+          profile: signupData.profile,
         };
       } else {
         user = {
           ...signupData,
           birth_date: birthDate.toISOString().split("T")[0],
           benefits: 0,
-          profile: profile,
+          profile: signupData.profile,
         };
       }
-      console.log("user", user);
-      try {
-        const res = await AuthService.register(user);
-        setSuccessful(true);
-        dispatchAction({ type: SIGN_UP_SUCCESS_ACTION });
-      } catch (err) {
-        dispatchAction({ type: SIGN_UP_FAIL_ACTION });
-      }
+      AuthService.register(user)
+        .then((res) => {
+          dispatchAction({ type: SIGN_UP_SUCCESS_ACTION });
+          setTimeout(() => {
+            setLoading(false);
+            setSuccessful(true);
+            window.location = "/signin";
+          }, 2000);
+        })
+        .catch((err) => {
+          setLoading(false);
+          dispatchAction({ type: SIGN_UP_FAIL_ACTION });
+        });
     }
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
   };
 
   return (
@@ -284,6 +290,7 @@ function SignUp({ signUpDispatch }) {
           </div>
         </form>
       </div>
+      <Spinner loading={loading} />
     </div>
   );
 }

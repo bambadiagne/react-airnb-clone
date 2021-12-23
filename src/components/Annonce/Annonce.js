@@ -5,7 +5,9 @@ import NewRoom from "../Room/NewRoom/NewRoom";
 import RoomService from "../../services/room/room-service";
 import { GET_ALL_ROOMS } from "../../actions/room/types";
 import SingleAnnonce from "./SingleAnnonce/SingleAnnonce";
+import Spinner from "../Spinner/Spinner";
 function Annonce({ user, annonceDispatch, rooms }) {
+  const [loading, setLoading] = useState(true);
   const [showPart, setShowPart] = useState({
     annonces: false,
     creationChambre: false,
@@ -13,6 +15,10 @@ function Annonce({ user, annonceDispatch, rooms }) {
   useEffect(() => {
     if (user) {
       RoomService.getAllRoomsByLandlord(user.id).then((res) => {
+        setTimeout(() => {
+          setLoading(false);
+        }, 1500);
+
         annonceDispatch({ type: GET_ALL_ROOMS, payload: res });
       });
     }
@@ -20,6 +26,10 @@ function Annonce({ user, annonceDispatch, rooms }) {
   const showAnnonces = () => {
     if (user) {
       RoomService.getAllRoomsByLandlord(user.id).then((res) => {
+        setTimeout(() => {
+          setLoading(false);
+        }, 1500);
+
         annonceDispatch({ type: GET_ALL_ROOMS, payload: res });
       });
     }
@@ -71,7 +81,10 @@ function Annonce({ user, annonceDispatch, rooms }) {
           )}
           {showPart.annonces ? (
             <div>
-              <div className="d-flex flex-wrap flex-column flex-md-row ">
+              <div
+                hidden={loading}
+                className="d-flex flex-wrap flex-column flex-md-row "
+              >
                 {rooms.map((room) => (
                   <SingleAnnonce key={room.id} room={room} />
                 ))}
@@ -84,9 +97,11 @@ function Annonce({ user, annonceDispatch, rooms }) {
       ) : (
         <Redirect to="/signin" />
       )}
+      <Spinner loading={loading} />
     </div>
   );
 }
+
 function mapStateToProps(state) {
   return {
     user: state.auth.user,

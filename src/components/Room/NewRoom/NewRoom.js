@@ -11,7 +11,9 @@ import RoomService from "../../../services/room/room-service";
 import TownService from "../../../services/town/town-service";
 import { GET_ALL_TOWNS } from "../../../actions/towns/types";
 import { CREATE_ROOM } from "../../../actions/room/types";
+import Spinner from "../../Spinner/Spinner";
 function NewRoom({ roomDispatch, user }) {
+  const [loading, setLoading] = useState(false);
   const [towns, setTown] = useState([]);
   useEffect(() => {
     TownService.getAllTowns()
@@ -62,6 +64,7 @@ function NewRoom({ roomDispatch, user }) {
     const { capacity, price, town } = newTownData;
 
     if (validateTownData(newTownData)) {
+      setLoading(true);
       setnewTownData({
         ...townData,
         capacity: Number(capacity),
@@ -70,13 +73,20 @@ function NewRoom({ roomDispatch, user }) {
 
       RoomService.createNewRoom(newTownData)
         .then((res) => {
-          setSuccessful(true);
+          setTimeout(() => {
+            setLoading(false);
+            setSuccessful(true);
+          }, 1500);
+
           roomDispatch({ type: CREATE_ROOM, payload: newTownData });
         })
         .catch((err) => {
           console.log("err", err);
           setErrors({ ...errors, err });
         });
+      setTimeout(() => {
+        setLoading(false);
+      }, 1500);
     }
   };
 
@@ -100,7 +110,7 @@ function NewRoom({ roomDispatch, user }) {
         </div>
 
         <h2>Nouvelle chambre</h2>
-        <label>Ville</label>
+        <label className="text-dark">Ville</label>
 
         <div className="form-group input-container">
           <FontAwesomeIcon icon={faHome} className="icon" />
@@ -119,7 +129,7 @@ function NewRoom({ roomDispatch, user }) {
           </select>
         </div>
 
-        <label>Capacité</label>
+        <label className="text-dark">Capacité</label>
         <div className="form-group input-container">
           <FontAwesomeIcon icon={faUser} className="icon" />
 
@@ -133,7 +143,7 @@ function NewRoom({ roomDispatch, user }) {
           />
         </div>
         <br />
-        <label>Prix</label>
+        <label className="text-dark">Prix</label>
 
         <div className="form-group input-container">
           <FontAwesomeIcon icon={faDollarSign} size="2x" className="icon" />
@@ -157,6 +167,7 @@ function NewRoom({ roomDispatch, user }) {
           </button>
         </div>
       </form>
+      <Spinner loading={loading} />
     </div>
   );
 }

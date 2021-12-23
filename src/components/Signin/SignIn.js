@@ -13,6 +13,7 @@ import {
   SIGN_IN_FAIL_ACTION,
   SIGN_IN_SUCCESS_ACTION,
 } from "../../actions/auth/types";
+import Spinner from "../Spinner/Spinner";
 
 function SignIn({ signInDispatch }) {
   const userData = {
@@ -20,6 +21,7 @@ function SignIn({ signInDispatch }) {
     password: null,
     profile: null,
   };
+  const [loading, setLoading] = useState(false);
   const [successful, setSuccessful] = useState(false);
   const [signinData, setSigninData] = useState(userData);
   const [errors, setErrors] = useState({ errors: [] });
@@ -46,24 +48,33 @@ function SignIn({ signInDispatch }) {
   const handleSubmit = (e) => {
     const { profile, username, password } = signinData;
     e.preventDefault();
+    setLoading(true);
 
     if (validateuserData(signinData)) {
       AuthService.login(username, profile, password)
         .then((res) => {
-          console.log(res);
-          setSuccessful(true);
           signInDispatch({
             type: SIGN_IN_SUCCESS_ACTION,
             payload: { username, profile, password, id: res.id },
           });
+          setTimeout(() => {
+            setSuccessful(true);
+            setLoading(false);
+
+            window.location = "/rooms";
+          }, 2000);
           //  console.log({username,profile,password,id:res.id});
         })
         .catch((err) => {
+          setLoading(false);
           console.log("err", err);
           setErrors({ errors: [err] });
           signInDispatch({ type: SIGN_IN_FAIL_ACTION });
         });
     }
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
   };
 
   return (
@@ -141,6 +152,7 @@ function SignIn({ signInDispatch }) {
           </Link>
         </div>
       </form>
+      <Spinner loading={loading} />
     </div>
   );
 }

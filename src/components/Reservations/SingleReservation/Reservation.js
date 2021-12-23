@@ -19,7 +19,10 @@ import {
   DELETE_RESERVATION,
 } from "../../../actions/reservation/types";
 import ReservationService from "../../../services/reservations/reservation-service";
+import Spinner from "../../Spinner/Spinner";
 function Reservation({ reservationDispatch, reservation, user }) {
+  const [loading, setLoading] = useState(false);
+
   const parseStringToDate = (date) => {
     const tabDate = date.split("-").map((elt) => Number(elt));
     return new Date(...tabDate);
@@ -68,14 +71,18 @@ function Reservation({ reservationDispatch, reservation, user }) {
 
   const cancelReservation = () => {
     if (window.confirm("Voulez vous vraiment annuler cette reservation")) {
+      setLoading(true);
       ReservationService.deleteSingleReservation(reservation.id)
         .then((res) => {
-          reservationDispatch({
-            type: DELETE_RESERVATION,
-            payload: reservation,
-          });
-          setCancelSuccess({ ...cancelSuccess, cancel: true });
-          window.location = "/reservations";
+          setTimeout(() => {
+            setLoading(false);
+            setCancelSuccess({ ...cancelSuccess, cancel: true });
+            reservationDispatch({
+              type: DELETE_RESERVATION,
+              payload: reservation,
+            });
+            window.location = "/reservations";
+          }, 1500);
         })
         .catch((err) => {});
     }
@@ -88,13 +95,23 @@ function Reservation({ reservationDispatch, reservation, user }) {
   };
   const confirmerReservation = (e) => {
     e.preventDefault();
-    ReservationService.UpdateSingleReservation(reservation.id, {
-      ...reservation,
-      status: "A",
-    }).then((res) => {
-      setCancelSuccess({ ...cancelSuccess, showModify: false, modify: true });
-      reservation.status = "P";
-    });
+    if (window.confirm("Voulez-vous confirmer la reservation")) {
+      ReservationService.UpdateSingleReservation(reservation.id, {
+        ...reservation,
+        status: "A",
+      }).then((res) => {
+        setTimeout(() => {
+          setLoading(false);
+          setCancelSuccess({
+            ...cancelSuccess,
+            showModify: false,
+            modify: true,
+          });
+        }, 1500);
+
+        reservation.status = "P";
+      });
+    }
   };
   const modifyReservation = (e) => {
     e.preventDefault();
@@ -106,7 +123,10 @@ function Reservation({ reservationDispatch, reservation, user }) {
         out_date: lastDate.toISOString().split("T")[0],
       })
         .then((res) => {
-          setCancelSuccess({ ...cancelSuccess, modify: true });
+          setTimeout(() => {
+            setCancelSuccess({ ...cancelSuccess, modify: true });
+            setLoading(false);
+          }, 1500);
           reservation = {
             ...reservation,
             nbr_persons: modifyCapacity,
@@ -298,6 +318,7 @@ function Reservation({ reservationDispatch, reservation, user }) {
       ) : (
         ""
       )}
+      <Spinner loading={loading} />
     </div>
   );
 }

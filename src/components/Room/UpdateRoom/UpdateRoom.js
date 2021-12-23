@@ -10,11 +10,7 @@ import { connect } from "react-redux";
 import RoomService from "../../../services/room/room-service";
 import TownService from "../../../services/town/town-service";
 import { GET_ALL_TOWNS } from "../../../actions/towns/types";
-import {
-  RETRIEVE_ROOM,
-  CREATE_ROOM,
-  UPDATE_ROOM,
-} from "../../../actions/room/types";
+import { RETRIEVE_ROOM, UPDATE_ROOM } from "../../../actions/room/types";
 import { useParams } from "react-router";
 function UpdateRoom({ roomDispatch, user }) {
   const { id } = useParams();

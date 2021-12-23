@@ -4,21 +4,24 @@ import Reservation from "../SingleReservation/Reservation";
 import ReservationService from "../../../services/reservations/reservation-service";
 import { GET_ALL_RESERVATIONS } from "../../../actions/reservation/types";
 import { Redirect } from "react-router";
+import Spinner from "../../Spinner/Spinner";
 function ReservationList({ user, reservationAction, allReservations }) {
-  const [fetched, setFetched] = useState(false);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (user) {
       if (user.profile === "locateur") {
         ReservationService.getAllReservationsByLandlord(user.id)
           .then((res) => {
-            console.log("resland", res);
             reservationAction({ type: GET_ALL_RESERVATIONS, payload: res });
+            setLoading(false);
           }, [])
           .catch((err) => {});
       } else {
         ReservationService.getAllReservationsByTenant(user.id)
           .then((res) => {
-            console.log("restenant", res);
+            setTimeout(() => {
+              setLoading(false);
+            }, 1500);
 
             reservationAction({ type: GET_ALL_RESERVATIONS, payload: res });
           })
@@ -49,6 +52,7 @@ function ReservationList({ user, reservationAction, allReservations }) {
       ) : (
         <Redirect to="/signin" />
       )}
+      <Spinner loading={loading} />
     </div>
   );
 }

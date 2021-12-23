@@ -38,22 +38,17 @@ class AuthService {
     localStorage.removeItem("isLogged");
   }
 
-  async register(signupData) {
-    console.log("ok");
-
-    return new Promise(async (resolve, reject) => {
+  register(signupData) {
+    return new Promise((resolve, reject) => {
       if (signupData.profile === "locataire") {
-        await axios
+        axios
           .post(API_URL + "tenants", signupData)
           .then((res) => {
-            console.log("NICE");
-
             resolve(res);
           })
           .catch((err) => reject(err));
       } else if (signupData.profile === "locateur") {
-        console.log("sldjTAIRE");
-        await axios
+        axios
           .post(API_URL + "landlords", signupData)
           .then((res) => resolve(res))
           .catch((err) => reject(err));
